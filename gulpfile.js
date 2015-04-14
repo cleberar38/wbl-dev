@@ -21,12 +21,14 @@ var gusing = require('gulp-using');
 var gutil = require('gulp-util');
 var eventstream = require('event-stream');
 var imageminpngcrush = require('imagemin-pngcrush');
+var mkdirp = require('mkdirp');
+var del = require('del');
 
 var cache = require('gulp-cache');
 var concat = require('gulp-concat');
-var imagemin = require('gulp-imagemin');
+var gimagemin = require('gulp-imagemin');
 var jshint = require('gulp-jshint');
-var rename = require('gulp-rename');
+var grename = require('gulp-rename');
 var connect = require('gulp-connect');
 var indexTemplate = "index_template.html";
 
@@ -35,24 +37,26 @@ gulp.task('default', function() {
 });
 
 
-var p = {
+var w = {
 
 	htmlTemplate: indexTemplate,
 
-	// ----- Our libs ------
+	// ----- External libs for WBL ------
 	libsCss: [
-	
+
 		// 'dist/lib/font-awesome/**/*.css',
 		// 'dist/lib/sass-bootstrap/**/*.css',
 		// 'dist/lib/leaflet/**/*.css',
-		// 'dist/lib/**/*.css'
+		'dist/lib/**/*.css'
 	],
 	libsJs: [
 
 		// 'dist/lib/es5-shim/es5-shim.js',
 		// 'dist/lib/json3/**/*.js',
 		// 'dist/lib/proj4/**/*.js',
-		// 'dist/lib/jquery/**/*.js',
+		'dist/lib/jquery/**/*.js',
+		'dist/lib/bootstrap/**/*.js',
+
 		// 'dist/lib/sass-bootstrap/**/*.js',
 		// 'dist/lib/leaflet/**/*.js',
 		// "dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.js", // Must come before NonTiledLayer.WMS.js
@@ -64,36 +68,36 @@ var p = {
 
 		// //'dist/lib/Leaflet.print-smap/**/*.js',
 		// 'lib/jquery.mobile.custom/jquery.mobile.custom.min.js', // Note! I could not install this lib with bower.
-		// 'dist/lib/**/*.js',
+		'dist/lib/**/*.js'
 		// '!dist/lib/leaflet-dist/*', // messing up
 		// '!dist/lib/libs.js', // Don't use previously compressed lib file
 		// '!dist/lib/add-to-homescreen/**/*.js', // Exclude this lib, it's optionally injected by plugin
 		// 'core/js/buildLibOverrides.js'  // Override libs js
 	],
 
-	// ----- Our code ------
-	ourSass: [
+	// ----- WBL code ------
+	wblSass: [
 
-		// // first
-		// // "core/css/**/*.scss",
+		// first
+		//"core/css/**/*.scss",
 
-		// // last
+		// last
 		// "plugins/**/*.scss"
 
 	],
-	ourStylus: [
+	wblStylus: [
 
-		// // first
+		// first
 		// "core/css/global.styl",
 		// "core/css/**/*.styl",
 
-		// // last
+		// last
 		// "plugins/**/*.styl"
 	],
-	ourCss: [
+	wblCss: [
 
-		// // first
-		// "core/css/app.css",
+		// first
+		"core/css/wbl.css"
 		// "core/css/lib-overrides.css",
 
 		// // last
@@ -109,10 +113,10 @@ var p = {
 
 		
 	],
-	ourJs: [
+	wblJs: [
 
-		// "core/js/smap.js",
-		// "core/js/*.js",
+		"core/js/wbl.js",
+		"core/js/*.js"
 		// "plugins/**/*.js",
 		// "!plugins/**/_*.js",
 		// "!plugins/Test/**/*.js",
@@ -130,15 +134,14 @@ var p = {
 };
 
 
-
-
-
 // ----- Tasks ------
-
 gulp.task('cleancode', function() {
-	gulp.src("dist/css").pipe(rimraf());
-	gulp.src("dist/js").pipe(rimraf());
-	gulp.src("dist/*.*").pipe(rimraf());
+	del(["dist/css","dist/js","dist/*.*"], function (err, deletedFiles) {
+		console.log('Files deleted:', deletedFiles.join(', '));
+	});
+});
+gulp.task('cleanlib', function() {
+	return gulp.src("dist/lib").pipe(rimraf());
 });
 gulp.task('cleanlib', function() {
 	return gulp.src("dist/lib").pipe(rimraf());
@@ -160,70 +163,67 @@ var onError = function(err) {
   	// this.emit('end');
 };
 
+//commented by CLEBER
+// gulp.task('move', function() {
+// 	gulp.src("plugins/**/resources/**/*") //, {base: "./"})
+// 		.pipe(gflatten())
+// 		// .pipe(using())
+// 		.pipe(gulp.dest("dist/resources/"));
+// });
 
-gulp.task('move', function() {
-	gulp.src("plugins/**/resources/**/*") //, {base: "./"})
-		.pipe(flatten())
-		// .pipe(using())
-		.pipe(gulp.dest("dist/resources/"));
-});
+// ---- wbl code -----
 
-// ---- Our code -----
+//Commented by CLEBER
+// gulp.task('wblcsscompile', function() {
+// 	var streamStylus = gulp.src(w.wblStylus, {base: "./"})
+// 			.pipe(stylus()).on("error", onError);
+// 	// var streamSass = gulp.src(w.wblSass, {base: "./"})
+// 	// 		.pipe(sass());
 
-gulp.task('ourcsscompile', function() {
-	var streamStylus = gulp.src(p.ourStylus, {base: "./"})
-			.pipe(stylus()).on("error", onError);
-	// var streamSass = gulp.src(p.ourSass, {base: "./"})
-	// 		.pipe(sass());
+// 	return es.merge(streamStylus) //streamSass)
+// 			.pipe(gautoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
+// 			.pipe(gulp.dest("."));
+// });
 
-	return es.merge(streamStylus) //streamSass)
-			.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9")) //.on('error', onError)
-			.pipe(gulp.dest("."));
-});
-
-
-gulp.task('ourcss', ['ourcsscompile'], function() {
+gulp.task('wblcss', function() {
+//Commented by CLEBER
+//gulp.task('wblcss', ['wblcsscompile'], function() {
 	return gulp
-		.src(p.ourCss)
-		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
+		.src(w.wblCss)
+		.pipe(gautoprefixer("last 1 version", "> 1%", "ie 8", "ie 9"))
 		// .pipe(csslint())
 		// .pipe(csslint.reporter())
-		// .pipe(order(p.ourCss.concat("*")))
-		.pipe(concat('smap.css'))
-		.pipe(mincss())
-		// .pipe(rename("smap.css"))
+		// .pipe(order(w.wblCss.concat("*")))
+		.pipe(concat('wbl.css'))
+		.pipe(gminifycss())
+		// .pipe(grename("smap.css"))
 		.pipe(gulp.dest("dist"))
 		.pipe(connect.reload());
 });
 
-
-
-gulp.task('ourjs', function() {
+gulp.task('wbljs', function() {
 	return gulp
-		.src(p.ourJs)
-		// .pipe(order(p.ourJs.concat("*")))
+		.src(w.wblJs)
+		// .pipe(order(w.wblJs.concat("*")))
 		// .pipe(jshint())
   // 		.pipe(jshint.reporter('default'))
-  		.pipe(stripDebug())
-  		.pipe(ngAnnotate())
-		.pipe(uglify())  // {mangle: false}
-  		.pipe(concat("smap.js"))
+  		.pipe(gstripdebug())
+  		.pipe(gngannotate())
+		.pipe(guglify())  // {mangle: false}
+  		.pipe(concat("wbl.js"))
 		.pipe(gulp.dest("dist"))
 		.pipe(connect.reload());
 });
-
-
-
 
 gulp.task('images', function () {
 	var imgDest = 'dist/img';
     return gulp
     	.src(['img/**/*.{png,jpg,jpeg,gif}'])
-    	.pipe(changed(imgDest))
-        .pipe(imagemin({
+    	.pipe(gchanged(imgDest))
+        .pipe(gimagemin({
         	progressive: true,
             svgoPlugins: [{removeViewBox: false}],
-            use: [pngcrush()]
+            use: [imageminpngcrush()]
         }))
         .pipe(gulp.dest(imgDest));
 });
@@ -241,16 +241,16 @@ gulp.task('configs', function() {
 // });
 
 gulp.task('libs', function() {
-	return gulp.src(bowerfiles(), {base: "./bower_components/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
+	return gulp.src(mbowerfiles(), {base: "./bower_components/"}).pipe(gulp.dest("dist/lib"));  // {checkExistence: true}
 });
 
 gulp.task('libsjs', ["libs"], function() {
 	return gulp
-		.src(p.libsJs)
+		.src(w.libsJs)
 		// .pipe(order(p.libsJs.concat("*")))
 		// .pipe(using())
   		.pipe(concat("libs.js"))
-		// .pipe(uglify())  // {mangle: false}
+		// .pipe(guglify())  // {mangle: false}
 		.on('error', onError)
 		.pipe(gulp.dest("dist"));
 });
@@ -258,34 +258,35 @@ gulp.task('libsjs', ["libs"], function() {
 // gulp.task('libscss', function() {
 // 	return gulp
 // 		.src(p.libsCss)
-// 		.pipe(autoprefixer("last 1 version", "> 1%", "ie 8"))
+// 		.pipe(gautoprefixer("last 1 version", "> 1%", "ie 8"))
 // 		// .pipe(csslint())
 // 		// .pipe(csslint.reporter())
-// 		// .pipe(order(p.ourCss.concat("*")))
+// 		// .pipe(order(w.wblCss.concat("*")))
 // 		.pipe(concat('libs.css'))
 // 		.pipe(mincss())
-// 		// .pipe(rename("smap.css"))
+// 		// .pipe(grename("smap.css"))
 // 		.pipe(gulp.dest("dist"));
 // });
 
-gulp.task('htmlinjectdev', ["libs", "ourcss", "ourjs"], function() {
-	var libsJs = p.libsJs.slice(0, p.libsJs.length-1); // we don't want buildLibOverrides.js because we don't compress libs
-	var devSrcs = libsJs.concat(p.libsCss).concat(p.ourJs).concat(p.ourCss);
+gulp.task('htmlinjectdev', ["libs", "wblcss", "wbljs"], function() {
+	var libsJs = w.libsJs.slice(0, w.libsJs.length-1); // we don't want buildLibOverrides.js because we don't compress libs
+	var devSrcs = libsJs.concat(w.libsCss).concat(w.wblJs).concat(w.wblCss);
+	console.log(libsJs);
 	return gulp
-		.src(p.htmlTemplate)
-		.pipe(inject(gulp.src(devSrcs, {read: false}), {addRootSlash: false}))
-		.pipe(rename("dev.html"))
+		.src(w.htmlTemplate)
+		.pipe(ginject(gulp.src(devSrcs, {read: false}), {addRootSlash: false}))
+		.pipe(grename("dev.html"))
 		.pipe(gulp.dest("."));
 });
 
-gulp.task('htmlinjectprod', ["libsjs", "ourcss", "ourjs"], function() {
+gulp.task('htmlinjectprod', ["libsjs", "wblcss", "wbljs"], function() {
 	var libsJs = ["dist/libs.js"]; //p.libsJs
-	var libsCss = p.libsCss; //["dist/libs.css"];
-	var prodSrcs = libsJs.concat(libsCss).concat("dist/smap.js").concat("dist/smap.css");
+	var libsCss = w.libsCss; //["dist/libs.css"];
+	var prodSrcs = libsJs.concat(libsCss).concat("dist/wbl.js").concat("dist/wbl.css");
 	return gulp
-		.src(p.htmlTemplate)
-		.pipe(inject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false, ignorePath: 'dist/'}))
-		.pipe(rename("index.html"))
+		.src(w.htmlTemplate)
+		.pipe(ginject(gulp.src(prodSrcs, {read: false}), {addRootSlash: false, ignorePath: 'dist/'}))
+		.pipe(grename("index.html"))
 		.pipe(gulp.dest("dist"));
 });
 gulp.task('htmlinject', ["htmlinjectdev", "htmlinjectprod"]);
@@ -293,18 +294,17 @@ gulp.task('htmlinject', ["htmlinjectdev", "htmlinjectprod"]);
 gulp.task('htmlcompress', ['htmlinject'], function() {
 	return gulp
 		.src('index.html')
-		.pipe(minhtml())
+		.pipe(gminifyhtml())
 		.pipe(gulp.dest("."));
 });
 gulp.task('html', ["htmlcompress"]);
 
+// Build wbl code (during dev)
+gulp.task('wblcode', ["wblcss", "wbljs"]);  // "move"
 
-
-
-// Build our code (during dev)
-gulp.task('ourcode', ["ourcss", "ourjs"]);  // "move"
-
-gulp.task('_full', ["images", "html", "move", "configs"]);
+gulp.task('_full', ["images", "html", "configs"]);
+//Modified by CLEBER
+//gulp.task('_full', ["images", "html", "move", "configs"]);
 
 // Clean the code and libs and then make a full build (i.e. fetch libs to dist,
 // compile js/css/sass/styl and insert into HTML).
@@ -312,11 +312,11 @@ gulp.task('full', ["cleancode"], function() {
 	return gulp.start("_full");
 });
 
-gulp.task('fullmalmo', ["cleancode"], function() {
-	// p.ourSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");  In case we need advanced sass functionality from malmo assets
-	p.htmlTemplate = indexTemplate;
-	return gulp.start("_full");
-});
+//gulp.task('fullmalmo', ["cleancode"], function() {
+// 	// w.wblSass.unshift("dist/lib/malmo_shared_assets/**/*.scss");  In case we need advanced sass functionality from malmo assets
+// 	p.htmlTemplate = indexTemplate;
+// 	return gulp.start("_full");
+// });
 
 // Note! It's wise to run <bower update> before resetting. Thereby, packages will be
 // up to date and any missing files (however that might happen...) will be filled-in.
@@ -331,9 +331,9 @@ gulp.task('webserver', function() {
 });
 
 gulp.task('watch', function() {
-	var css = p.ourCss.concat(p.ourStylus).concat(p.ourSass);
-	// var js = p.ourJs.concat("dist/configs/*.js");
-	var tasks = ["ourcode"];
+	var css = w.wblCss.concat(w.wblStylus).concat(w.wblSass);
+	// var js = w.wblJs.concat("dist/configs/*.js");
+	var tasks = ["wblcode"];
 	gulp.start(tasks); // Start by running once
 	return gulp.watch(css, tasks);
 });
@@ -341,8 +341,4 @@ gulp.task('watch', function() {
 gulp.task('watchweb', ["webserver", "watch"]); // Allow auto-publishing whenever something changes
 
 gulp.task('default', ["watch"]); // Note! <gulp> is same as <gulp default>
-
-
-
-
 
