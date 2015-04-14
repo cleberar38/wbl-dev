@@ -53,12 +53,12 @@ var w = {
 
 		// 'dist/lib/es5-shim/es5-shim.js',
 		// 'dist/lib/json3/**/*.js',
-		// 'dist/lib/proj4/**/*.js',
+		'dist/lib/proj4/**/*.js',
 		'dist/lib/jquery/**/*.js',
 		'dist/lib/bootstrap/**/*.js',
 
 		// 'dist/lib/sass-bootstrap/**/*.js',
-		// 'dist/lib/leaflet/**/*.js',
+		'dist/lib/leaflet/**/*.js',
 		// "dist/lib/Leaflet.NonTiledLayer/NonTiledLayer.js", // Must come before NonTiledLayer.WMS.js
 		// 'dist/lib/GeoJSON.WFS/index.js',
 		// 'dist/lib/leaflet.draw/**/*.js',

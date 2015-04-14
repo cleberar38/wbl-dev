@@ -32,6 +32,8 @@
 		
 		<link rel="stylesheet" href="dist/lib/bootstrap/dist/css/bootstrap.min.css">
 		
+		<link rel="stylesheet" href="dist/lib/leaflet/dist/leaflet.css">
+		
 		<link rel="stylesheet" href="core/css/wbl.css">
 		
 		<!-- endinject -->
@@ -40,19 +42,29 @@
 		
 		<!-- inject:js -->
 		
+		<script src="dist/lib/proj4/dist/proj4.js"></script>
+		
 		<script src="dist/lib/jquery/dist/jquery.js"></script>
 		
 		<script src="dist/lib/bootstrap/dist/js/bootstrap.js"></script>
 		
+		<script src="dist/lib/leaflet/dist/leaflet-src.js"></script>
+		
+		<script src="dist/lib/leaflet/dist/leaflet.js"></script>
+		
 		<script src="core/js/wbl.js"></script>
 		
+		<script src="core/js/Div.js"></script>
+		
 		<script src="core/js/Init.js"></script>
+		
+		<script src="core/js/utils.js"></script>
 		
 		<!-- endinject -->
 
 		<script type="text/javascript">
 			$(document).ready(function() {
-				wbl.core.initInst = new wbl.core.Init.initialize();	
+				wbl.core.initInst = new wbl.core.Init();	
 			});
 		</script>
 	</body>

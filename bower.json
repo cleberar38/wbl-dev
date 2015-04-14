@@ -19,28 +19,33 @@
   ],
   "dependencies": {
     "jquery": "~2.1.3",
-    "bootstrap": "~3.3.4"
+    "bootstrap": "~3.3.4",
+    "leaflet": "~0.7.3",
+    "proj4": "~2.3.6"
   },
   "overrides": {
-
     "bootstrap": {
       "main": [
-          "less/bootstrap.less",
-          "dist/css/*",
-          "dist/js/bootstrap.js",
-          "dist/fonts/glyphicons-halflings-regular.eot",
-          "dist/fonts/glyphicons-halflings-regular.svg",
-          "dist/fonts/glyphicons-halflings-regular.ttf",
-          "dist/fonts/glyphicons-halflings-regular.woff",
-          "dist/fonts/glyphicons-halflings-regular.woff2"
+        "less/bootstrap.less",
+        "dist/css/*",
+        "dist/js/bootstrap.js",
+        "dist/fonts/glyphicons-halflings-regular.eot",
+        "dist/fonts/glyphicons-halflings-regular.svg",
+        "dist/fonts/glyphicons-halflings-regular.ttf",
+        "dist/fonts/glyphicons-halflings-regular.woff",
+        "dist/fonts/glyphicons-halflings-regular.woff2"
       ]
     },
     "jquery": {
-        "main": [
-          "dist/jquery.js"
-        ]
-
+      "main": [
+        "dist/jquery.js"
+      ]
+    },
+    "leaflet": {
+      "main": [
+        "dist/*.js",
+        "dist/*.css"
+      ]
     }
-
   }
 }
