@@ -4,5 +4,5 @@ var wbl = {
 
 	event: $('<div />'),
 
-	copyright: "© 2014 WBLive"
+	copyright: "© 2014 WBL"
 };

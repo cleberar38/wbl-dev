@@ -133,7 +133,6 @@ var w = {
 
 };
 
-
 // ----- Tasks ------
 gulp.task('cleancode', function() {
 	del(["dist/css","dist/js","dist/*.*"], function (err, deletedFiles) {
@@ -289,6 +288,7 @@ gulp.task('htmlinjectprod', ["libsjs", "wblcss", "wbljs"], function() {
 		.pipe(grename("index.html"))
 		.pipe(gulp.dest("dist"));
 });
+
 gulp.task('htmlinject', ["htmlinjectdev", "htmlinjectprod"]);
 
 gulp.task('htmlcompress', ['htmlinject'], function() {
