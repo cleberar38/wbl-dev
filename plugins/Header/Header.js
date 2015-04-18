@@ -35,6 +35,8 @@ L.Control.Header = L.Control.extend({
 
         //Here is the jQuery access to this container
         this.$container = $(this._container);
+
+        this.createHeader();
 	        
     	return this._container;    
     },
@@ -44,7 +46,9 @@ L.Control.Header = L.Control.extend({
     },
 
     createHeader: function() {
-    	var self = this; 
+    	var self = this;
+        var header = $('<div id="wbl-header" class="wblheader"></span></div>');
+        $('#mainDiv').prepend(header);
     }
 
 });

@@ -6,12 +6,12 @@ wbl.core.Div = L.Class.extend({
 	},
 	
 	draw: function() {
-		var mapDiv = $("#mapdiv");
+		var mapDiv = $("#mapDiv");
 		
 		if ( !mapDiv.length ) {
 			// It is is possbile to run wbl with custom divs
-			var mapDiv = $('<div id="mapdiv" class="mapdiv" />');
-			var mainDiv = $('<div id="maindiv" class="maindiv" />');
+			var mapDiv = $('<div id="mapDiv" class="mapdiv" />');
+			var mainDiv = $('<div id="mainDiv" class="maindiv" />');
 			mainDiv.append(mapDiv);
 			this.parentTag.append(mainDiv);
 		}

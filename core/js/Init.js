@@ -79,7 +79,7 @@ wbl.core.Init = L.Class.extend({
 
 		var mapOptions = $.extend({}, options);
 
-		this.map = L.map("mapdiv", mapOptions);
+		this.map = L.map("mapDiv", mapOptions);
 		wbl.map = this.map;
 
 		console.log("wbl.core.Init - drawMap function");
