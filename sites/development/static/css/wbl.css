@@ -1,1 +1,1 @@
-body,html{width:100%}.test{display:inline-block}.wblheader{background-color:#3c3c3c}
+.wblheader,body,html{width:100%}.test{display:inline-block}.wblheader{position:relative;height:55px;display:block;background-color:#3c3c3c}
