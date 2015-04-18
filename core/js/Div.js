@@ -9,7 +9,7 @@ wbl.core.Div = L.Class.extend({
 		var mapDiv = $("#mapdiv");
 		
 		if ( !mapDiv.length ) {
-			// It is is possbile to run wblmap with custom divs
+			// It is is possbile to run wbl with custom divs
 			var mapDiv = $('<div id="mapdiv" class="mapdiv" />');
 			var mainDiv = $('<div id="maindiv" class="maindiv" />');
 			mainDiv.append(mapDiv);
